@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>v-for循环对象数组</title>
+    <!-- 1、导入Vue包 -->
+    <script src="./lib/vue-2.4.0.js"></script>
+</head>
+<body>
+    
+    <div id="app">
+        <!-- 不带索引的循环对象数组 -->
+        <p v-for="user in list"> id: {{ user.id }} ---- name: {{ user.name }}</p>
+        <!-- 带索引的循环对象数组 -->
+        <p v-for="(user, i) in list">索引：{{ i }} ----- id: {{ user.id }} ---- name: {{ user.name }}</p>
+    </div>
+    <script>
+        // 创建Vue实例 获得 ViewModel
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                list: [
+                    { id: 1, name: 'zs1' },
+                    { id: 2, name: 'zs2' },
+                    { id: 3, name: 'zs3' },
+                    { id: 4, name: 'zs4' },
+                ]
+            },
+            methods:{}
+        });
+    </script>
+</body>
+</html>
