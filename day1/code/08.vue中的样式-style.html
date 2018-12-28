@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue中的style</title>
+    <!-- 1、导入vue包 -->
+    <script src="./lib/vue-2.4.0.js"></script>
+</head>
+<body>
+    
+    <div id="app">
+        <!-- 对象就是无序键值对的集合 : 是 v-bind 的简写 注意：属性中有 - 是需要添加引号 -->
+        <!-- 第一中方式 -->
+        <!-- <h1 :style="{color: 'red', 'font-weight':200}">这是一个h1</h1> -->
+
+        <!-- 第二种方式：数据对象绑定 -->
+        <h1 :style="styleObj1">这是一个h1</h1>
+
+        <!-- 第三种方式：数组可以绑定多个样式对象 -->
+        <h1 :style="[styleObj1, styleObj2]">数组可以多个样式</h1>
+
+    </div>
+
+    <script>
+        // 创建 vue 实例，得到 ViewModel
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                styleObj1: {color: 'red', 'font-weight':200},
+                styleObj2: {'font-style':'italic','font-weight':'bold'}
+            },
+            methods: {
+
+            }
+        })
+    </script>
+</body>
+</html>
