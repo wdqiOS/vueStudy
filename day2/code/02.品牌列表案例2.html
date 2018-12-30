@@ -9,11 +9,6 @@
     <script src="./lib/vue-2.4.0.js"></script>
     <link rel="stylesheet" href="./lib/bootstrap-3.3.7.css">
     <!-- 需要用到 Jquery 吗？？Jquery是对Dom操作的，Vue中尽量不是用Jquery -->
-    <style>
-        *{
-            font-weight: 
-        }
-    </style>
 </head>
 <body>
     
@@ -77,13 +72,17 @@
 
         // 全局的过滤器，进行时间的格式化
         // 所谓的全局过滤器，就是所有的vm实例都可以调用
+        //在月份、日期、小时等小于10前面补0
+        var padDate = function (value) {
+            return value <10 ? '0' + value:value;
+        };
         Vue.filter('dateFormat', function(dataStr, pattern="") {
             // 根据给定的时间字符串，得到特定的时间
             var dt = new Date(dataStr);
             // yyyy-mm-dd
             var y = dt.getFullYear();
-            var m = dt.getMonth() + 1;
-            var d = dt.getDate();
+            var m = padDate(dt.getMonth() + 1);
+            var d = padDate(dt.getDate());
             // return y + '-' + m + '-' + d;
  
             
@@ -91,9 +90,9 @@
             if( pattern.toLowerCase() == 'yyyy-mm-dd' ){
                 return `${y}-${m}-${d}`
             } else {
-                var hh = dt.getHours();
-                var mm = dt.getMinutes();
-                var ss = dt.getSeconds();
+                var hh = padDate(dt.getHours());
+                var mm = padDate(dt.getMinutes());
+                var ss = padDate(dt.getSeconds());
 
                 return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
             }

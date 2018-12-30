@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 1、导入Vue包 -->
+    <script src="./lib/vue-2.4.0.js"></script>
+    <script src="./lib/vue-resource-1.3.4.js"></script>
+    <link rel="stylesheet" href="./lib/bootstrap-3.3.7.css">
+</head>
+
+<body>
+    <!-- 2、创建一个要控制的区域 -->
+    <div id="app">
+        
+        
+        <div class="panel panel-primary">
+              <div class="panel-heading">
+                    <h3 class="panel-title">添加品牌</h3>
+              </div>
+              <div class="panel-body form-inline">
+                   <label>
+                        Name:
+                        <input type="text" v-model="name" @keyup.enter="add">
+                    </label>
+
+                    
+                    <!-- <button type="button" class="btn btn-primary" @click="add">添加</button> -->
+                    <input type="button" class="btn btn-primary"  value="添加" @click="add" >
+              </div>
+        </div>
+        
+
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Ctime</th>
+                    <th>Operation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in list" :key="item.id">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.ctime | dateFormat() }}</td>
+                    <td>
+                        <a href="" @click.prevent="del(item.id)" >删除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    <script>
+        // 如果我们通过全局配置了，请求的数据接口，根域名，则，在每次单独发起 http 请求的时候，请求的 url 路径，应该以相对路径开头，前面不能带 / ，否则，不会启用根路径做拼接
+        Vue.http.options.root = 'http://localhost:3000/';
+        // 全局的过滤器，进行时间的格式化
+        // 所谓的全局过滤器，就是所有的vm实例都可以调用
+        //在月份、日期、小时等小于10前面补0
+        var padDate = function (value) {
+            return value <10 ? '0' + value:value;
+        };
+        Vue.filter('dateFormat', function(dataStr, pattern="") {
+            // 根据给定的时间字符串，得到特定的时间
+            var dt = new Date(dataStr);
+            // yyyy-mm-dd
+            var y = dt.getFullYear();
+            var m = padDate(dt.getMonth() + 1);
+            var d = padDate(dt.getDate());
+            // return y + '-' + m + '-' + d;
+ 
+            
+            
+            if( pattern.toLowerCase() == 'yyyy-mm-dd' ){
+                return `${y}-${m}-${d}`
+            } else {
+                var hh = padDate(dt.getHours());
+                var mm = padDate(dt.getMinutes());
+                var ss = padDate(dt.getSeconds());
+
+                return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
+            }
+        });
+
+        // 创建 Vue 实例，获得 ViewModel
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                name: '',
+                list: [ // 存放所有品牌数据的列表
+                    { id : 1, name: '五菱宏光', ctime: new Date() },
+                    { id : 2, name: '众泰', ctime: new Date() },
+                ]
+            },
+            created() { // 当 vm 实例的 data 和 methods 初始化完毕后，vm 实例会自动调用
+                this.getAllList()
+            },
+            methods: {
+                getAllList() { // 获取所有的图书列表
+                    // 分析：
+                    // 1、由于已经导入了 Vue-resource 这个包，所以，可以直接通过 this.$http 来发起数据请求
+                    // 2、根据接口Api 文档，获取列表的时候，应该发起一个 get 请求
+                    // 3、this.$http.get('url').then(function(){})
+                    // 4、当通过 then 指定回调函数之后，在回调函数中，可以拿到数据服务器返回的 result
+                    // 5、先判断 result.status 是否等于0，如果等于0，就成功了，可以把 result.message 赋值给 this.list; 如果不等于 0 ，可以弹框提醒，获取数据失败！
+                    this.$http.get('books').then(result => {
+                        // 注意：通过 $http 获取到的数据，都在 result.body 中放着
+                        if(result.status == 200){
+                            // 获取数据成功了
+                            this.list = result.body;
+                        }else{
+                            alert('数据获取失败了!')
+                        }
+                    },err => {
+                        console.log(err);
+                    })
+                },
+                add() { // 添加品牌到后台服务器
+                    // 分析：
+                    // 1、通过查看数据API接口，要发送一个 post 请求，this.$http.post
+                    // 2、this.$http.post() 中接收三个参数
+                    //  2.1 第一个参数：要求的 url 地址
+                    //  2.2 第二个参数：要提交给服务器的数据，要以对象形式提交给服务器{ name: this.name }
+                    //  2.3 第三个参数：是一个配置对象，要以哪种表单数据类型提交过去，{ emulateJson: true } , 以普通表单格式，将数据提交给服务器 application/x-www-form-urlencoded
+                    // 3、在post 方法中，使用 .then 来设置成功的回调函数，如果想要拿到成功的结果，需要 result.body中获取
+                    this.$http.post('books/book', { name: this.name}, { emulateJSON: true }).then( result => {
+                        if( result.status == 200 ){
+                            // 成功了
+                            // 添加完成以后，只需要手动，调用一下 getAllList() 重新刷新列表
+                            this.getAllList()
+                            // 清空name
+                            this.name = ''
+                        } else {
+                            alert('添加失败')
+                        }
+                    }, failure => {
+                        console.log(failure)
+                    })
+
+                },
+                del( id ) {
+                    this.$http.delete('books/book/' + id).then( result => {
+                        if( result.status == 200 ){
+                            this.getAllList()
+                        } else {
+                            alert('删除失败')
+                        }
+                    }, failure => {
+                        alert(failure)
+                    })
+                }
+            }
+        });
+
+        
+    </script>
+</body>
+
+</html>
