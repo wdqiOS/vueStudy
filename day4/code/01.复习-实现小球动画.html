@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 1、导入Vue包 -->
+    <script src="./lib/vue-2.4.0.js"></script>
+    <style>
+        .ball{
+            width: 15px;
+            height: 15px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- 2、创建一个要控制的区域 -->
+    <div id="app">
+        <input type="button" value="加入购物车" @click="flag = !flag">
+        <transition
+         @before-enter="beforeEnter"
+         @enter="enter"
+         @after-enter="afterEnter">
+            <div class="ball" v-show="flag"></div>
+        </transition>
+        
+    </div>
+    
+    <script>
+        // 创建 Vue 实例，获得 ViewModel
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                flag: false
+            },
+            methods: {
+                beforeEnter(el){
+                    el.style.transform = 'translate(0, 0)'
+                },
+                enter(el, done){
+                    el.offsetWidth
+
+                    el.style.transform = 'translate(150px, 450px)'
+                    el.style.transition = 'all 0.5s ease'
+                    done()
+                },
+                afterEnter(el){
+                    // 这句话，第一个功能，是控制小球的显示与隐藏
+                    // 第二个功能：直接跳过后半场动画，让 flag 标识符 直接变为 false
+                    // 当第二次再点击按钮的时候，flag = false -> true
+                    this.flag = !this.flag;
+
+                    // el.style.opacity = 0.5;
+                    // Vue 把一个完整的动画，使用钩子函数，拆分为了两部分(上半场动画、下半场动画)：
+                    // 我们使用 flag 标识符，来标识动画的切换；
+                    // 刚一开始，flag = false —> true -> false
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

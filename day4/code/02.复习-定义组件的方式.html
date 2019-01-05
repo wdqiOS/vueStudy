@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 1、导入Vue包 -->
+    <script src="./lib/vue-2.4.0.js"></script>
+</head>
+
+<body>
+    <!-- 2、创建一个要控制的区域 -->
+    <div id="app">
+        <tmp1></tmp1>
+        <tmp2></tmp2>
+        <tmp3></tmp3>
+        <tmp4></tmp4>
+        <private></private>
+        <my-tmp></my-tmp>
+        <tmp></tmp>
+    </div>
+
+    <template id="tmp3">
+        <h1>组件格式三</h1>
+    </template>
+    <template id="privateComponent">
+        <h1>这是私有组件</h1>
+    </template>
+    
+    <script>
+
+        // 定义组件的时候，如果要定义全局的组件，Vue.component('组件的名称', 组件的模板对象/Vue.extend({
+        //     template:''
+        // }))
+        var tmp = {
+            template: '<h1>组件格式一</h1>'
+        }
+        // 定义组件的方式一：格式 Vue.component('组件的名称', 组件的模板对象)
+        Vue.component('tmp1', tmp);
+        // 定义组件的方式二：格式 Vue.component('组建的名称', Vue.extend({template:'模板'}))
+        Vue.component('tmp2', Vue.extend({
+            template: '<h1>组件格式二</h1>'
+        }))
+        // 定义组件的方式三（使用template）：格式 Vue.component('组件的名称',{template: "id"})
+        Vue.component('tmp3', {
+            template: '#tmp3'
+        })
+
+        // 定义组件的方式四 格式：var tmp = Vue.extend({template: ''}) Vue.component('组件的名称', tmp)
+        var tmps = Vue.extend({
+            template:'<h1>组件格式四</h1>'
+        })
+        Vue.component('tmp4', tmps)
+
+
+
+        // 创建 Vue 实例，获得 ViewModel
+        var vm = new Vue({
+            el: "#app",
+            data: {},
+            methods: {},
+            components: { // 私有组件 格式： '组件的名称': 组件模板对象 
+                // 注意: 组件名称使用驼峰标识时，使用时，大写字母改为小写，中间用 - 连接
+                'private': {
+                    template: '#privateComponent'
+                },
+                'myTmp': tmp,
+                // 组件定义的简写，需要先定义一个组件自变量
+                tmp
+                
+
+            }
+        })
+    </script>
+</body>
+
+</html>

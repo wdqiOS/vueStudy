@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 1、导入Vue包 -->
+    <script src="./lib/vue-2.4.0.js"></script>
+    <style>
+        .ball{
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 2、创建一个要控制的区域 -->
+    <div id="app">
+        <input type="button" value="加入购物车" @click="flag=!flag">
+        <!-- 1、使用 transition 元素把小球包裹起来 -->
+        <transition 
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @after-enter="afterEnter"
+            v-on:enter-cancelled="enterCancelled">
+            <div class="ball" v-show="flag"></div>
+        </transition>
+        
+    </div>
+    <script>
+        // 创建 Vue 实例，获得 ViewModel
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                flag: false
+            },
+            methods: {
+                // 注意：动画钩子函数的第一个参数：el，表示要执行动画的那个DOM元素，是个原生的 JS DOM对象
+                // 大家可以认为，el 是通过 document.getElementById('') 方式获取到的原生 JS DOM 对象
+                beforeEnter(el) {
+                    // beforeEnter 表示动画入场之前，此时，动画尚未开始，可以在beforeEnter中设置元素开始动画之前的起始样式
+                    // 设置小球开始动画之前的，起始位置
+                    el.style.transform = "translate(0, 0)"
+                    console.log('beforeEnter')
+                },
+                enter(el, done) {
+                    // 这句话，没有实际的左右，但是，如果不写，出不来动画效果;
+                    // 可以认为 el.offsetWidth / el.offsetHeight / el.offsetLeft / el.offsetRight  会强制动画刷新
+                    el.offsetWidth 
+                    // enter 表示动画开始之后的样式，这里 可以设置小球完成动画完成之后的样式，结束状态
+                    el.style.transform = "translate(150px, 450px)"
+                    el.style.transition = "all 0.8s ease"
+                    console.log('enter')
+                    // 这里的 done,其实就是 afterEnter 的引用
+                    done();
+                },
+                afterEnter(el) {
+                    // 动画完成之后，会调用 afterEnter
+                    this.flag = !this.flag;
+                    console.log('afterEnter')
+                },
+                enterCancelled() {
+                    console.log('enterCancelled')
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
