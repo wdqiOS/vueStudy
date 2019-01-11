@@ -1,0 +1,16 @@
+html,body{
+    .box{
+        width: 200px;
+        height: 200px;
+        // 默认情况下，webpack 无法处理 css 文件中的 url 地址，不管是图片还是 字体库，只要是 url 地址，都处理不了,需要依赖loader： url-loader 和 file-loader url-loader依赖file-loader
+        background:url('../images/long.jpg');
+        background-size: cover;
+    }
+    .box2{
+        width: 200px;
+        height: 200px;
+        // 默认情况下，webpack 无法处理 css 文件中的 url 地址，不管是图片还是 字体库，只要是 url 地址，都处理不了,需要依赖loader： url-loader 和 file-loader url-loader依赖file-loader
+        background:url('../images2/long.jpg');
+        background-size: cover;
+    }
+}

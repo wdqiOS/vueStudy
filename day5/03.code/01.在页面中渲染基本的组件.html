@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 1、导入Vue包 -->
+    <script src="./lib/vue-2.4.0.js"></script>
+</head>
+
+<body>
+    <!-- 2、创建一个要控制的区域 -->
+    <div id="app">
+        <p>333333</p>
+        <login></login>
+    </div>
+    <script>
+
+        // 基本组件的使用
+        var login = {
+            template: "<h1>这是登录组件</h1>"
+        }
+
+        // 创建 Vue 实例，获得 ViewModel
+        var vm = new Vue({
+            el: "#app",
+            data: {},
+            methods: {},
+            components:{
+                login
+            }
+        })
+    </script>
+</body>
+
+</html>

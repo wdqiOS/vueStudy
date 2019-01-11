@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 1、导入Vue包 -->
+    <script src="./lib/vue-2.4.0.js"></script>
+    <script src="./lib/vue-router-3.0.1.js"></script>
+</head>
+
+<body>
+    <!-- 2、创建一个要控制的区域 -->
+    <div id="app">
+        <router-link to="/login">登录</router-link>
+        <router-link to="/register">注册</router-link>
+        <!-- 容器 -->
+        <router-view></router-view>
+    </div>
+    <script>
+
+        // 2、创建子组件
+        var login = {
+            template: '<h3>登录</h3>'
+        }
+
+        var register = {
+            template: '<h3>注册</h3>'
+        }
+        // 3、创建一个路由对象
+        const router = new VueRouter({
+            routes: [ // 路由规则
+                { path: '/', redirect: '/login'},
+                { path: '/login', component: login },
+                { path: '/register', component: register },
+            ],
+            linkActiveClass: 'myactive' // 和激活相关的类
+        })
+
+        // 创建 Vue 实例，获得 ViewModel
+        var vm = new Vue({
+            el: "#app",
+            data: {},
+            methods: {},
+            router
+        })
+    </script>
+</body>
+
+</html>
